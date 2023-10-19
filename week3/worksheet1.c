@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 int main(){
+    /*
     //task 1
     int number;
     printf("Enter a number: ");
@@ -70,7 +71,7 @@ int main(){
         default:
             printf("Error not an option\n");
     }
-    
+    */
 
     //task 6
     int num;
