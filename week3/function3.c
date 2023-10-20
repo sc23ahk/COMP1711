@@ -27,6 +27,7 @@ int main ()
     printf ("Select B to convert to Kelvin\n");
     printf ("Select Q to quit\n");
 
+    //need the space as the enter from the previous scan will be taken as the char here
     scanf(" %c", &option);
 
     switch (option)
