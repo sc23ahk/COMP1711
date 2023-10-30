@@ -9,6 +9,7 @@ typedef struct {
 	int steps;
 } FITNESS_DATA;
 
+
 FILE *open_file(char *filename, char *mode)
 {
     FILE *file = fopen(filename, mode);
@@ -56,26 +57,14 @@ int main() {
     char *filename = "FitnessData_2023.csv";
     FILE *file = open_file(filename, "r");
 
-    int buffer_size = 100;
-    char line_buffer[buffer_size];
+    int buffer_size = 100000;
+    char array [10000];
     int count = 1;
     FITNESS_DATA old_temp [0];
-
-    do
-    {
-        FITNESS_DATA new_temp [count];
-        //sizeof() function from 
-        //https://www.w3resource.com/c-programming-exercises/c-snippets/determine-size-of-structure-and-why-structure-size-is-different-in-c.php
-        for(i=0;i< sizeof(old_count); i++){
-            new_temp[i] = old_temp[i];
-        }
-        tokeniseRecord(line_buffer, ",", new_temp[count].date, new_temp[count].time, new_temp[count].steps);
-        count = count + 1;
-        FITNESS_DATA old_temp [count];
-        for(i=0;i< sizeof(new_count); i++){
-            old_temp[i] = new_temp[i];
-        }
-    }while (fgets(line_buffer, buffer_size, file) != NULL);
+    while (fgets(array, buffer_size, file)!= NULL){
+        puts(array);
+    }
+    char 
 
     fclose(file);
     return 0;
