@@ -9,16 +9,6 @@ typedef struct {
 	int steps;
 } FITNESS_DATA;
 
-FILE *open_file(char *filename, char *mode)
-{
-    FILE *file = fopen(filename, mode);
-    if (file == NULL)
-    {
-        printf("Error opening file\n");
-        exit(1);
-    }
-    return file;
-}
 
 
 
@@ -51,36 +41,42 @@ void tokeniseRecord(const char *input, const char *delimiter,
 }
 
 // Complete the main function
-int main() {
-    int i;
+int main(){
+    //open the file for reading
     char *filename = "FitnessData_2023.csv";
-    FILE *file = open_file(filename, "r");
-
-    int buffer_size = 100;
-    char line_buffer[buffer_size];
-    int count = 1;
-    FITNESS_DATA old_temp [0];
-
-    do
+    FILE *file = fopen(filename, "r");
+    if (file == NULL)
     {
-        FITNESS_DATA new_temp [count];
-        //sizeof() function from 
-        //https://www.w3resource.com/c-programming-exercises/c-snippets/determine-size-of-structure-and-why-structure-size-is-different-in-c.php
-        for(i=0;i< sizeof(old_count); i++){
-            new_temp[i] = old_temp[i];
-        }
-        tokeniseRecord(line_buffer, ",", new_temp[count].date, new_temp[count].time, new_temp[count].steps);
-        count = count + 1;
-        FITNESS_DATA old_temp [count];
-        for(i=0;i< sizeof(new_count); i++){
-            old_temp[i] = new_temp[i];
-        }
-    }while (fgets(line_buffer, buffer_size, file) != NULL);
-
+        printf("Error opening file\n");
+        exit(1);
+    }
+    //loop through each line of the file and count each line
+    char count_array [100], lines [100];
+    int count = 0;
+    while (fgets(count_array, 100, file)!= NULL){
+        count++;
+    }
+    //close the file
     fclose(file);
+    //output the numebr of lines (records) in the file
+    printf("Number of records in file: %d\n", count);
+    //open the file again for reading
+    FILE *file2 = fopen(filename, "r");
+    int i = 0;
+    //loop through each line tokenising each line
+    while (fgets(lines, 100, file2)){
+        char date [12];
+        char time [6];
+        char steps [15];
+        tokeniseRecord(lines, ",", date, time, steps);
+        //convert steps to an integer
+        int intsteps = atoi(steps);
+        //print the first three records of the data
+        if (i<3){
+            printf("%s/%s/%d\n", date, time, intsteps);
+            i++;
+        }
+    }
+    fclose(file2);
     return 0;
-    
-
-
-
 }
