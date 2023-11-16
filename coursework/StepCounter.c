@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+//#include "FitnessDataStruct.h"
 
 // Define an appropriate struct
-typedef struct {
+struct {
 	char date[11];
 	char time[6];
 	int steps;
@@ -41,8 +42,27 @@ void tokeniseRecord(const char *input, const char *delimiter,
 }
 
 // Complete the main function
-int main() {
-                //declare the whole data structure
+int main(){
+    //Display all of the options
+    printf("A:Import a file");
+    printf("B:Display the total number of records");
+    printf("C:Display the date and time of the day with the fewest steps");
+    printf("D:Display the date and time of the day with the most steps");
+    printf("E:Display the mean step count");
+    printf("F:Display the highest streak of days with over 500 steps");
+    printf("Q:Exit");
+
+    // get the next character typed in and store in the 'choice'
+    char choice = getchar();
+
+    // this gets rid of the newline character which the user will enter
+    // as otherwise this will stay in the stdin and be read next time
+    while (getchar() != '\n');
+
+    switch(choice){
+        case 'A':
+        case 'a': ;
+            //declare the whole data structure
             FITNESS_DATA data[10000];
             //collect filename
             char filename [100];
@@ -69,20 +89,15 @@ int main() {
                 data[rows] = record;
                 rows++;
             }
-            data[rows] = {"", "", 0}
-            printf("%d\n", rows);
             //close the file
             fclose(file);
-            int count =0;
-            FITNESS_DATA empty = {"","",0};
-            while(data[0] != empty){
-                count++;
-            }
-            //int size = sizeof(data) / sizeof(data[0]);
-            printf("%d\n", count);
+        /*    
+        switch 'B':
+        switch 'b':
+            int size = sizeof(data);
+            printf("%d", size);
+        */
+            
+    }
     return 0;
-    
-
-
-
 }
