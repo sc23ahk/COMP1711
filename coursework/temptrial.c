@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 // Define an appropriate struct
 typedef struct {
@@ -69,17 +70,56 @@ int main() {
                 data[rows] = record;
                 rows++;
             }
-            data[rows] = {"", "", 0}
-            printf("%d\n", rows);
-            //close the file
-            fclose(file);
-            int count =0;
-            FITNESS_DATA empty = {"","",0};
-            while(data[0] != empty){
-                count++;
+            printf("Total records: %d\n", rows);
+            int lowSteps = 1000000;
+            int record;
+            for (int i=0; i < rows; i++){
+                if (data[i].steps < lowSteps){
+                    lowSteps = data[i].steps;
+                    record = i;
+                }
             }
-            //int size = sizeof(data) / sizeof(data[0]);
-            printf("%d\n", count);
+            printf("Fewest Steps: %s %s\n", data[record].date, data[record].time);
+            int highSteps = -1;
+            record = 0;
+            for (int i=0; i < rows; i++){
+                if (data[i].steps > highSteps){
+                    highSteps = data[i].steps;
+                    record = i;
+                }
+            }
+            printf("Largest Steps: %s %s\n", data[record].date, data[record].time);
+            int total = 0;
+            for (int i=0; i<rows; i++){
+                total = total + data[i].steps;
+            }
+            int mean = total/rows;
+            printf("Mean Step Count: %d\n", mean);
+            int period = 0;
+            int tempStart = -1;
+            int start = -1;
+            int end = -1;
+            int tempPeriod;
+            bool inPeriod = false;
+            for (int i=0; i< rows; i++){
+                if (data[i].steps > 500){
+                    if(!inPeriod){
+                        tempStart = i;
+                        inPeriod = true;
+                    }
+                }else if(inPeriod){
+                    tempPeriod = i-tempStart;
+                    if (tempPeriod > period){
+                        start = tempStart;
+                        end = i-1;
+                        period = tempPeriod;
+                    }
+                    tempPeriod = 0;
+                    inPeriod = false;
+                }
+            }
+            printf("Longest Period Start: %s %s\n", data[start].date, data[start].time);
+            printf("Longest Period End: %s %s\n", data[end].date, data[end].time);
     return 0;
     
 

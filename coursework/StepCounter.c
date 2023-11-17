@@ -1,16 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-//#include "FitnessDataStruct.h"
+#include "FitnessDataStruct.h"
+#include <stdbool.h>
 
-// Define an appropriate struct
-struct {
-	char date[11];
-	char time[6];
-	int steps;
-} FITNESS_DATA;
-
-
+//global variables
+FITNESS_DATA data[100000];
+char filename [100];
+int rows = 0;
 
 
 // This is your helper function. Do not change it in any way.
@@ -43,6 +40,14 @@ void tokeniseRecord(const char *input, const char *delimiter,
 
 // Complete the main function
 int main(){
+                //declare the whole data structure
+            FITNESS_DATA data[10000];
+            //collect filename
+            char filename [100];
+            char buffer [10000];
+            int rows;
+            FILE *file;
+            FITNESS_DATA record;
     //Display all of the options
     printf("A:Import a file");
     printf("B:Display the total number of records");
@@ -61,43 +66,112 @@ int main(){
 
     switch(choice){
         case 'A':
-        case 'a': ;
-            //declare the whole data structure
-            FITNESS_DATA data[10000];
+        case 'a':
+        {
             //collect filename
-            char filename [100];
             printf("Insert a name: ");
             scanf("%s", filename);
             //open the file
             FILE *file = fopen(filename, "r");
-            //check that file opened correctly
-            if (file == NULL)
-            {
-                printf("Error: could not open file\n");
-                exit(1);
+            if (file == NULL) {
+                printf("Error opening file\n");
+                 exit(1);
             }
             //declarations
             char buffer [10000];
-            int rows = 0;
             //loop through the file reading each line and tokenising
             //it before adding it to data
             while (fgets(buffer, 10000, file)!= NULL){
                 char strSteps[20];
-                FITNESS_DATA record = {};
-                tokeniseRecord(buffer, ",", record.date, record.time, strSteps);
-                record.steps = atoi(strSteps);
-                data[rows] = record;
+                FITNESS_DATA singleRow = {};
+                tokeniseRecord(buffer, ",", singleRow.date, singleRow.time, strSteps);
+                singleRow.steps = atoi(strSteps);
+                data[rows] = singleRow;
                 rows++;
             }
-            //close the file
-            fclose(file);
-        /*    
-        switch 'B':
-        switch 'b':
-            int size = sizeof(data);
-            printf("%d", size);
-        */
-            
+            break;
+        }  
+        case 'B':
+        case 'b':
+        {
+            printf("Total records: %d\n", rows);
+            break;
+        }
+        case 'C':
+        case 'c':
+        {
+            int lowSteps = 1000000;
+            int record;
+            for (int i=0; i < rows; i++){
+                if (data[i].steps < lowSteps){
+                    lowSteps = data[i].steps;
+                    record = i;
+                }
+            }
+            printf("Fewest Steps: %s %s\n", data[record].date, data[record].time);
+            break;
+        }
+        case 'D':
+        case 'd':
+        {
+            int highSteps = -1;
+            record = 0;
+            for (int i=0; i < rows; i++){
+                if (data[i].steps > highSteps){
+                    highSteps = data[i].steps;
+                    record = i;
+                }
+            }
+            printf("Largest Steps: %s %s\n", data[record].date, data[record].time);
+            break;
+        }
+        case 'E':
+        case 'e':
+        {
+            int total = 0;
+            for (int i=0; i<rows; i++){
+                total = total + data[i].steps;
+            }
+            int mean = total/rows;
+            printf("Mean Step Count: %d\n", mean);
+            break;
+        }
+        case 'F':
+        case 'f':
+        {
+            int period = 0;
+            int tempStart = -1;
+            int start = -1;
+            int end = -1;
+            int tempPeriod;
+            bool inPeriod = false;
+            for (int i=0; i< rows; i++){
+                if (data[i].steps > 500){
+                    if(!inPeriod){
+                        tempStart = i;
+                        inPeriod = true;
+                    }
+                }else if(inPeriod){
+                    tempPeriod = i-tempStart;
+                    if (tempPeriod > period){
+                        start = tempStart;
+                        end = i-1;
+                        period = tempPeriod;
+                    }
+                    tempPeriod = 0;
+                    inPeriod = false;
+                }
+            }
+            printf("Longest Period Start: %s %s\n", data[start].date, data[start].time);
+            printf("Longest Period End: %s %s\n", data[end].date, data[end].time);
+            break;
+        }
+        case 'Q':
+        case 'q':
+        {
+            exit(0);
+            break;
+        }
     }
     return 0;
 }
