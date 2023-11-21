@@ -40,33 +40,31 @@ void tokeniseRecord(const char *input, const char *delimiter,
 
 // Complete the main function
 int main(){
-                //declare the whole data structure
-            FITNESS_DATA data[10000];
-            //collect filename
-            char filename [100];
-            char buffer [10000];
-            int rows;
-            FILE *file;
-            FITNESS_DATA record;
-    //Display all of the options
-    printf("A:Import a file");
-    printf("B:Display the total number of records");
-    printf("C:Display the date and time of the day with the fewest steps");
-    printf("D:Display the date and time of the day with the most steps");
-    printf("E:Display the mean step count");
-    printf("F:Display the highest streak of days with over 500 steps");
-    printf("Q:Exit");
+    //declarations
+    char buffer [10000];
+    FILE *file;
+    FITNESS_DATA record;
+    //create an infinite loop
+    while (true){
+        //Display all of the options
+        printf("A:Import a file\n");
+        printf("B:Display the total number of records\n");
+        printf("C:Display the date and time of the day with the fewest steps\n");
+        printf("D:Display the date and time of the day with the most steps\n");
+        printf("E:Display the mean step count\n");
+        printf("F:Display the highest streak of days with over 500 steps\n");
+        printf("Q:Exit\n");
 
-    // get the next character typed in and store in the 'choice'
-    char choice = getchar();
+        // get the next character typed in and store in the 'choice'
+        char choice = getchar();
 
-    // this gets rid of the newline character which the user will enter
-    // as otherwise this will stay in the stdin and be read next time
-    while (getchar() != '\n');
+        // this gets rid of the newline character which the user will enter
+        // as otherwise this will stay in the stdin and be read next time
+        while (getchar() != '\n');
 
-    switch(choice){
-        case 'A':
-        case 'a':
+        switch(choice){
+            case 'A':
+            case 'a':
         {
             //collect filename
             printf("Insert a name: ");
@@ -94,14 +92,17 @@ int main(){
         case 'B':
         case 'b':
         {
+            //print the total numebr of records
             printf("Total records: %d\n", rows);
             break;
         }
         case 'C':
         case 'c':
         {
+            //declarations
             int lowSteps = 1000000;
             int record;
+            //loop through the rows checking whether there exists a step counter lower than lowSteps
             for (int i=0; i < rows; i++){
                 if (data[i].steps < lowSteps){
                     lowSteps = data[i].steps;
@@ -114,8 +115,10 @@ int main(){
         case 'D':
         case 'd':
         {
+            //declarations
             int highSteps = -1;
-            record = 0;
+            int record;
+            //loop through the rows checking whether there exists a step counter higher than highSteps
             for (int i=0; i < rows; i++){
                 if (data[i].steps > highSteps){
                     highSteps = data[i].steps;
@@ -128,10 +131,12 @@ int main(){
         case 'E':
         case 'e':
         {
+            //calculate total step count
             int total = 0;
             for (int i=0; i<rows; i++){
                 total = total + data[i].steps;
             }
+            //calculate and disaply mean 
             int mean = total/rows;
             printf("Mean Step Count: %d\n", mean);
             break;
@@ -139,25 +144,34 @@ int main(){
         case 'F':
         case 'f':
         {
+            //declarations
             int period = 0;
             int tempStart = -1;
             int start = -1;
             int end = -1;
             int tempPeriod;
             bool inPeriod = false;
+            //loop through every record in the data file
             for (int i=0; i< rows; i++){
+                //check whether steps meets condition
                 if (data[i].steps > 500){
+                    //check if the stepcount is the first in a period
+                    //if not record it as the first inn the period
                     if(!inPeriod){
                         tempStart = i;
                         inPeriod = true;
                     }
+                //code for when steps does not mean condition
                 }else if(inPeriod){
+                    //calculate period length
                     tempPeriod = i-tempStart;
+                    //check whether the period is longer than the current longest period
                     if (tempPeriod > period){
                         start = tempStart;
                         end = i-1;
                         period = tempPeriod;
                     }
+                    //reset period variables
                     tempPeriod = 0;
                     inPeriod = false;
                 }
@@ -169,9 +183,11 @@ int main(){
         case 'Q':
         case 'q':
         {
+            //exit the code
             exit(0);
             break;
         }
+        }   
     }
     return 0;
 }
