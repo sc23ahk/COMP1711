@@ -9,6 +9,17 @@ typedef struct {
     int steps;
 } FitnessData;
 
+void end(){
+    printf("Error: Invalid file\n");
+    exit(1);
+}
+
+void checkEmpty(char *line){
+    if (line[0] == ',' || line[11] == ','){
+        end();
+    }
+}
+
 // Function to tokenize a record
 void tokeniseRecord(char *record, char delimiter, char *date, char *time, int *steps) {
     char *ptr = strtok(record, &delimiter);
@@ -38,8 +49,7 @@ int main() {
     //check that file opened correctly
     if (file == NULL)
     {
-        printf("Error: invalid file\n");
-        exit(1);
+        end();
     }
     //declarations
     char buffer [10000];
@@ -47,10 +57,19 @@ int main() {
     //loop through the file reading each line and tokenising
     //it before adding it to data
     while (fgets(buffer, 10000, file)!= NULL){
+        checkEmpty(buffer);
         FitnessData record = {};
-        tokeniseRecord(buffer, ',', record.date, record.time, record.steps);
+        int tempSteps [10];
+        tokeniseRecord(buffer, ',', record.date, record.time, tempSteps);
+        record.steps = tempSteps[0];
         data[rows] = record;
         rows++;
     }
+    for (int i=0; i < rows; i++){
+        if (data[i].steps <= 0){
+            end();
+        }
+    }
+    
     
 }

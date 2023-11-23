@@ -3,6 +3,7 @@
 #include <string.h>
 #include "FitnessDataStruct.h"
 #include <stdbool.h>
+#include <math.h>
 
 //global variables
 FITNESS_DATA data[100000];
@@ -40,10 +41,6 @@ void tokeniseRecord(const char *input, const char *delimiter,
 
 // Complete the main function
 int main(){
-    //declarations
-    char buffer [10000];
-    FILE *file;
-    FITNESS_DATA record;
     //create an infinite loop
     while (true){
         //Display all of the options
@@ -136,9 +133,10 @@ int main(){
             for (int i=0; i<rows; i++){
                 total = total + data[i].steps;
             }
-            //calculate and disaply mean 
-            int mean = total/rows;
-            printf("Mean Step Count: %d\n", mean);
+            //calculate, round and disaply mean 
+            float mean = total/rows;
+            int roundMean = round(mean);
+            printf("Mean Step Count: %d\n", roundMean);
             break;
         }
         case 'F':
