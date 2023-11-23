@@ -14,9 +14,17 @@ void end(){
     exit(1);
 }
 
-void checkEmpty(char *line){
+void checkDateTime(char *line){
     if (line[0] == ',' || line[11] == ','){
         end();
+    }
+}
+
+void checkSteps(FitnessData *data, int rows){
+    for (int i=0; i < rows; i++){
+        if (data[i].steps <= 0){
+            end();
+        }
     }
 }
 
@@ -57,7 +65,7 @@ int main() {
     //loop through the file reading each line and tokenising
     //it before adding it to data
     while (fgets(buffer, 10000, file)!= NULL){
-        checkEmpty(buffer);
+        checkDateTime(buffer);
         FitnessData record = {};
         int tempSteps [10];
         tokeniseRecord(buffer, ',', record.date, record.time, tempSteps);
@@ -65,10 +73,18 @@ int main() {
         data[rows] = record;
         rows++;
     }
-    for (int i=0; i < rows; i++){
-        if (data[i].steps <= 0){
-            end();
+    checkSteps(data, rows);
+    for(int i=1; i <rows; i++){
+        int current = data[i].time;
+        int j=i-1;
+        while(j>=0 && data[j].time > current){
+            data[j+1].time = data[j].time;
+            j=j-1;
         }
+        data[j+1].time = current;
+    }
+    for(int i=0; i< rows; i++){
+        printf("%s/%s/%d\n", data[rows].date, data[rows].time, data[rows].steps);
     }
     
     
