@@ -9,21 +9,26 @@ typedef struct {
     int steps;
 } FitnessData;
 
-void end(){
+
+//function to end the program
+void end(int i){
     printf("Error: Invalid file\n");
-    exit(1);
+    exit(i);
 }
 
+//function that checks that a line has the date and time
 void checkDateTime(char *line){
     if (line[0] == ',' || line[11] == ','){
-        end();
+        end(1);
     }
 }
 
+//function that checks that the number of steps are positive
+//and that there is a value for steps
 void checkSteps(FitnessData *data, int rows){
     for (int i=0; i < rows; i++){
         if (data[i].steps <= 0){
-            end();
+            end(1);
         }
     }
 }
@@ -57,7 +62,7 @@ int main() {
     //check that file opened correctly
     if (file == NULL)
     {
-        end();
+        end(1);
     }
     //declarations
     char buffer [10000];
@@ -65,6 +70,7 @@ int main() {
     //loop through the file reading each line and tokenising
     //it before adding it to data
     while (fgets(buffer, 10000, file)!= NULL){
+        //check that there exists a date and time
         checkDateTime(buffer);
         FitnessData record = {};
         int tempSteps [10];
@@ -73,19 +79,31 @@ int main() {
         data[rows] = record;
         rows++;
     }
+    //close file
+    fclose(file);
+    //check that the steps are formatted correctly
     checkSteps(data, rows);
+    //perform an insertion sort on the data sorting it into descending order
     for(int i=1; i <rows; i++){
-        int current = data[i].time;
+        FitnessData current = data[i];
         int j=i-1;
-        while(j>=0 && data[j].time > current){
-            data[j+1].time = data[j].time;
+        while(j>=0 && data[j].steps < current.steps){
+            data[j+1] = data[j];
             j=j-1;
         }
-        data[j+1].time = current;
+        data[j+1] = current;
     }
-    for(int i=0; i< rows; i++){
-        printf("%s/%s/%d\n", data[rows].date, data[rows].time, data[rows].steps);
+    //concatenate .tsv to filename
+    strcat(filename, ".tsv");
+    //create a new file in write mode
+    FILE *file2 = fopen(filename, "w");
+    //copy the contents of the sorted data array into the .tsv file
+    for (int i=0; i<rows; i++){
+        fprintf(file2, "%s\t%s\t%d\n", data[i].date, data[i].time, data[i].steps);
     }
-    
-    
+    //close file
+    fclose(file2);
+    //end program
+    end(0);
+
 }

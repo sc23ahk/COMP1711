@@ -53,11 +53,8 @@ int main(){
         printf("Q:Exit\n");
 
         // get the next character typed in and store in the 'choice'
-        char choice = getchar();
-
-        // this gets rid of the newline character which the user will enter
-        // as otherwise this will stay in the stdin and be read next time
-        while (getchar() != '\n');
+        char choice;
+        scanf(" %c", &choice);
 
         switch(choice){
             case 'A':
@@ -133,7 +130,7 @@ int main(){
             for (int i=0; i<rows; i++){
                 total = total + data[i].steps;
             }
-            //calculate, round and disaply mean 
+            //calculate, round and display mean 
             float mean = total/rows;
             int roundMean = round(mean);
             printf("Mean Step Count: %d\n", roundMean);
