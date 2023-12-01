@@ -13,5 +13,4 @@ int main()
     printf ("\n Address[2] = %d\n", *(address+2));
 
     
-
 }

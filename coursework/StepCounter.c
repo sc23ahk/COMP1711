@@ -67,7 +67,7 @@ int main(){
             FILE *file = fopen(filename, "r");
             if (file == NULL) {
                 printf("Error opening file\n");
-                 exit(1);
+                exit(1);
             }
             //declarations
             char buffer [10000];
@@ -81,12 +81,13 @@ int main(){
                 data[rows] = singleRow;
                 rows++;
             }
+            fclose(file);
             break;
         }  
         case 'B':
         case 'b':
         {
-            //print the total numebr of records
+            //print the total number of records
             printf("Total records: %d\n", rows);
             break;
         }
@@ -131,9 +132,9 @@ int main(){
                 total = total + data[i].steps;
             }
             //calculate, round and display mean 
-            float mean = total/rows;
-            int roundMean = round(mean);
-            printf("Mean Step Count: %d\n", roundMean);
+            float tempMean = total/rows;
+            int mean = round(tempMean);
+            printf("Mean Step Count: %d\n", mean);
             break;
         }
         case 'F':

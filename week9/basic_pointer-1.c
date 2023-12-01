@@ -14,4 +14,6 @@ int main()
     printf ("Now the magic ! Content of \"*var_address\" = %d\n", *var_address);
     
     printf("\n");
+
+    return 0;
 }
